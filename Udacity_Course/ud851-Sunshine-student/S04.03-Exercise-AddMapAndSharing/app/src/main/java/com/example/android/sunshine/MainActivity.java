@@ -221,8 +221,30 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             return true;
         }
 
+        if (id == R.id.action_map) {
+            String address = "Groningen, Populierenlaan 1";
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("geo")
+                    .path("0,0")
+                    .query(address);
+            Uri addressUri = builder.build();
+
+
+            // TODO (6) Use Uri.Builder with the appropriate scheme and query to form the Uri for the address
+
+            // TODO (7) Replace the Toast with a call to showMap, passing in the Uri from the previous step
+            ShowMap(addressUri);
+            return true;
+        }
         // TODO (2) Launch the map when the map menu item is clicked
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void ShowMap(Uri addressUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, addressUri);
+        if (intent.resolveActivity(getPackageManager())!=null) {
+            startActivity(intent);
+        }
     }
 }

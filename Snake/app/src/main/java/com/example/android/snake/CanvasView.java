@@ -45,8 +45,7 @@ public class CanvasView extends View {
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
-
-    }
+            }
 
     private void initPaint() {
         paint = new Paint();
@@ -55,7 +54,8 @@ public class CanvasView extends View {
     }
 
 
-//is used to determine the screen size
+
+    //is used to determine the screen size
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;

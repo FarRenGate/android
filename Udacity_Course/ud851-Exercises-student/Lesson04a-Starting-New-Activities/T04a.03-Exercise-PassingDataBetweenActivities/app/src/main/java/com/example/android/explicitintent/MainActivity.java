@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
+                String textEntered = mNameEntry.getText().toString();
                 // TODO (1) Retrieve the text from the EditText and store it in a variable
 
                 /*
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                  * context, which we stored in the variable named "context".
                  */
                 Intent startChildActivityIntent = new Intent(context, destinationActivity);
+                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
 
                 // TODO (2) Use the putExtra method to put the String from the EditText in the Intent
 

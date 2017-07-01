@@ -32,6 +32,9 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final String KEY_STORE_URL = "UrlStored";
+    static final String KEY_STORE_JSON = "JsonStored";
+
     // TODO (1) Create a static final key to store the query's URL
 
     // TODO (2) Create a static final key to store the search's raw JSON
@@ -58,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(KEY_STORE_URL)) {
+                mUrlDisplayTextView.setText(savedInstanceState.getString(KEY_STORE_URL));
+            }
+            if (savedInstanceState.containsKey(KEY_STORE_JSON)) {
+                mSearchResultsTextView.setText(savedInstanceState.getString(KEY_STORE_JSON));
+            }
+        }
 
         // TODO (9) If the savedInstanceState bundle is not null, set the text of the URL and search results TextView respectively
     }
@@ -149,6 +161,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String Url = mUrlDisplayTextView.getText().toString();
+        outState.putString(KEY_STORE_URL,Url);
+
+        String JSON = mSearchResultsTextView.getText().toString();
+        outState.putString(KEY_STORE_JSON,JSON);
     }
 
     // TODO (3) Override onSaveInstanceState to persist data across Activity recreation

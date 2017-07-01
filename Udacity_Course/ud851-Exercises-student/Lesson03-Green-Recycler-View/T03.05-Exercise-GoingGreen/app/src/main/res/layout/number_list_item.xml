@@ -30,6 +30,15 @@
         android:textSize="42sp"
         tools:text="#42" />
 
+    <TextView
+        android:id="@+id/tv_view_holder_instance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_gravity="center_vertical|end"
+        android:fontFamily="monospace"
+        android:textColor="#000"/>
+
     <!--TODO (1) Add a TextView with id "@+id/tv_view_holder_instance-->
     <!--TODO (2) Set the style to @style/TextAppearance.AppCompat.Title-->
     <!--TODO (3) Set the width and the height to wrap_content-->

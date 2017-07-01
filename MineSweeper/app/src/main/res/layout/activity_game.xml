@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.minesweeper.GameActivity"
+    android:orientation="vertical">
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="5">
+
+        <Button
+           android:id="@+id/b_0"
+            android:tag="0"
+            />
+        <Button
+            android:id="@+id/b_1"
+            android:tag="1"/>
+        <Button
+            android:id="@+id/b_2"
+            android:tag="2"/>
+        <Button
+            android:id="@+id/b_3"
+            android:tag="3"/>
+        <Button
+            android:id="@+id/b_4"
+            android:tag="4"/>
+        <Button
+            android:id="@+id/b_5"
+            android:tag="5"/>
+        <Button
+            android:id="@+id/b_6"
+            android:tag="6"/>
+        <Button
+            android:id="@+id/b_7"
+            android:tag="7"/>
+        <Button
+            android:id="@+id/b_8"
+            android:tag="8"/>
+        <Button
+            android:id="@+id/b_9"
+            android:tag="9"/>
+        <Button
+            android:id="@+id/b_10"
+            android:tag="10"/>
+        <Button
+            android:id="@+id/b_11"
+            android:tag="11"/>
+        <Button
+            android:id="@+id/b_12"
+            android:tag="12"/>
+        <Button
+            android:id="@+id/b_13"
+            android:tag="13"/>
+        <Button
+            android:id="@+id/b_14"
+            android:tag="14"/>
+        <Button
+            android:id="@+id/b_15"
+            android:tag="15"/>
+        <Button
+            android:id="@+id/b_16"
+            android:tag="16"/>
+        <Button
+            android:id="@+id/b_17"
+            android:tag="17"/>
+        <Button
+            android:id="@+id/b_18"
+            android:tag="18"/>
+        <Button
+            android:id="@+id/b_19"
+            android:tag="19"/>
+
+   </GridLayout>
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="bombs left:"/>
+
+    <TextView
+        android:id="@+id/tv_bombs_left"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Number of Bonbs:"/>
+
+        <EditText
+            android:id="@+id/et_set_bombs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="5"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/b_start_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set bombs and start"/>
+
+
+</LinearLayout>

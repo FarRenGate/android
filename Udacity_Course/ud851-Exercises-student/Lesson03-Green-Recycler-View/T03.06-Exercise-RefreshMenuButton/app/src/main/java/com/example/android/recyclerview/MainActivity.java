@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         mNumbersList.setAdapter(mAdapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+
+    }
+
     // TODO (2) Create a menu resource in res/menu/ called main.xml
     // TODO (3) Add one item to the menu with an ID of action_refresh
     // TODO (4) Set the title of the menu item to "Refresh" using strings.xml
@@ -79,6 +88,19 @@ public class MainActivity extends AppCompatActivity {
     // TODO (7) Override onCreateOptionsMenu
     // TODO (8) Use getMenuInflater().inflate to inflate the menu
     // TODO (9) Return true to display this menu
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemClicked = item.getItemId();
+        if (itemClicked==R.id.action_refresh) {
+            mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
+            mNumbersList.setAdapter(mAdapter);
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     // TODO (10) Override onOptionsItemSelected
     // TODO (11) Within this method, get the ID from the MenuItem
