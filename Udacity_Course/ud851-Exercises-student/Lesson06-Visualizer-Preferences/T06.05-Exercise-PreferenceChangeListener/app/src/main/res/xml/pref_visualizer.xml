@@ -9,4 +9,20 @@
         android:summaryOn="@string/pref_show_true"
         android:title="@string/pref_show_bass_label" />
 
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_show_mid_default"
+        android:key="@string/pref_show_mid_key"
+        android:summaryOff="@string/pref_show_false"
+        android:summaryOn="@string/pref_show_true"
+        android:title="@string/pref_show_mid_label" />
+
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_show_tre_default"
+        android:key="@string/pref_show_tre_key"
+        android:summaryOff="@string/pref_show_false"
+        android:summaryOn="@string/pref_show_true"
+        android:title="@string/pref_show_tre_label" />
+
 </PreferenceScreen>

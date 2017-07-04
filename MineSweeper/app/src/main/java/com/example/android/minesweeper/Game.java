@@ -16,10 +16,12 @@ public class Game {
 
     private static final int PUT_FLAG=1;
     private static final int REMOVE_FLAG=-1;
+
     private static int numberOfMines;
     private static int width;
     private static int height;
     private static int fieldsTotal;
+
     private static boolean isGameStarted;
     private static boolean isWin;
     private static boolean isLost;
@@ -76,9 +78,9 @@ public class Game {
     private void initField(){
         gameField = new Cell[width][height]; // creating array of cells
 
-        for (int i=0; i<width; i++) {
-            for (int j = 0; j < height; j++) {
-                gameField[i][j]=new Cell(); // and initializing all cells
+        for (int x=0; x<width; x++) {
+            for (int y = 0; y < height; y++) {
+                gameField[x][y]=new Cell(); // and initializing all cells
             }
         }
     }
@@ -132,11 +134,13 @@ public class Game {
             startGame(fieldNumber);
         }
         Coordinates coordinates = fieldNumberToCoordinates(fieldNumber);
-        if (gameField[coordinates.x][coordinates.y].isFlagged()) {
+        int x = coordinates.x;
+        int y=coordinates.y;
+        if (gameField[x][y].isFlagged()) {
             removeFlag(coordinates);
-        } else if (gameField[coordinates.x][coordinates.y].isClosed()) {
+        } else if (gameField[x][y].isClosed()) {
             putFlag(coordinates);
-        } else if (gameField[coordinates.x][coordinates.y].isOpen()) {
+        } else if (gameField[x][y].isOpen()) {
             openSurroundingCells(coordinates);
         }
         if (checkIfGameWon()) {
@@ -151,21 +155,29 @@ public class Game {
         return coordinates;
     }
 
+    private int coordinatesToFieldNumber (int x, int y) {
+        return x+y*width;
+    }
+
     private void startGame(int fieldNumber) {
         isGameStarted=true;
         putMines(fieldNumber);
     }
 
     private void putMines(int fieldNumber) { // place mines after first click
-        Set<Integer> mines = new TreeSet<>();// TreeSet of mines to ensure no repetition of positions
         listOfMines = new ArrayList<>();
         Random r = new Random();
-        Coordinates coordinates;
+        int mineX;
+        int mineY;
 
-        while (mines.size()<numberOfMines) { // while there is still something to add
-            int putMine = r.nextInt(fieldsTotal);//rangomly generating mine position within the fieldSize
-            if (putMine!=fieldNumber) {// if this is not "clicking" point
-                mines.add(putMine); // add mine coordinates to the mine array
+        while (listOfMines.size()<numberOfMines) { // while there is still something to add
+            mineX = r.nextInt(width);
+            mineY = r.nextInt(height); //rangomly generating mine position within the fieldSize
+            if (coordinatesToFieldNumber(mineX,mineY)!=fieldNumber) {// if this is not "clicking" point
+                if (!gameField[mineX][mineY].hasMine()){
+                    gameField[mineX][mineY].putMine();
+                    listOfMines.add(new Coordinates(mineX,mineY));
+                }
             }
         }
 
@@ -177,51 +189,37 @@ public class Game {
         */
 
 
-        for (Integer mine: mines) { // for each mine coordinate
-            coordinates = fieldNumberToCoordinates(mine);
-            listOfMines.add(coordinates);
-            try {
-                gameField[coordinates.x][coordinates.y].putMine(); // put a mine there
 
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (Integer mine: mines) {// for each mine coordinate
-            coordinates = fieldNumberToCoordinates(mine);
-            for (int i=coordinates.x-1; i<=coordinates.x+1; i++) // checking all coordinates aroung
-                for (int j=coordinates.y-1; j<=coordinates.y+1; j++) {
-                    if ((coordinates.x!=i||coordinates.y!=j)&&i>=0&&j>=0&&i<width&&j<height) { // if this is not the mine cell
-                        gameField[i][j].addNeighboringMine(); // then number in the cell must be increased by 1
+        for (Coordinates mineCoordinates: listOfMines) {// for each mine coordinate
+            int x=mineCoordinates.x;
+            int y=mineCoordinates.y;
+            for (int x2=x-1; x2<=x+1; x2++) // checking all coordinates aroung
+                for (int y2=y-1; y2<=y+1; y2++) {
+                    if (insideTheFieldAndNotEqualToCoordinates(x2,y2,mineCoordinates)) { // if this is not the mine cell
+                        gameField[x2][y2].addNeighboringMine(); // then number in the cell must be increased by 1
                     }
                 }
 
         }
-
-        mines.clear();
-
     }
 
     public void clickOnCell (Coordinates coordinates) {
+        int x=coordinates.x;
+        int y=coordinates.y;
 
-        if (gameField[coordinates.x][coordinates.y].hasMine()&&!gameField[coordinates.x][coordinates.y].isFlagged()) {
-            gameField[coordinates.x][coordinates.y].open();
-            for (Coordinates coordinates1: listOfMines) {
-                gameField[coordinates1.x][coordinates1.y].open();
+        if (gameField[x][y].hasMine()&&!gameField[x][y].isFlagged()) {
+            gameField[x][y].open();
+            for (Coordinates mineCoordinates: listOfMines) {
+                gameField[mineCoordinates.x][mineCoordinates.y].open();
             }
             loseGame();
-        } else if (gameField[coordinates.x][coordinates.y].isClosed()) {// if the cell is not open yet
-            gameField[coordinates.x][coordinates.y].open(); // open the cell
+        } else if (gameField[x][y].isClosed()) {// if the cell is not open yet
+            gameField[x][y].open(); // open the cell
             fieldsOpen++;//increase the number of open fields
-            if (gameField[coordinates.x][coordinates.y].getNeighboringMines() == 0) {//if the cell is "0"-cell we must open all surrounding cells
+            if (gameField[x][y].getNeighboringMines() == 0) {//if the cell is "0"-cell we must open all surrounding cells
                clickOnSurroundingCells(coordinates);
-
             }
-
         }
-
     }
 
     public String toString() {
@@ -246,20 +244,15 @@ public class Game {
         }
     }
 
-    private boolean isInField(Coordinates coordinates) {
-        return coordinates.x>=0&&coordinates.x<width&&coordinates.y>=0&&coordinates.y<height;
-    }
 
-    private boolean isInField(int x, int y) {
-        return x>=0&&x<width&&y>=0&&y<width;
-    }
 
     private void clickOnSurroundingCells (Coordinates coordinates) {
-        for (int i = coordinates.x - 1; i <= coordinates.x + 1; i++)
-            for (int j = coordinates.y - 1; j <= coordinates.y + 1; j++) {
-                Coordinates newClick = new Coordinates(i, j);
-                if (isInField(newClick) && !newClick.equals(coordinates)) {// if the surrounding cell is withing the field and is different cell
-                    clickOnCell(newClick);//click on it
+        int x=coordinates.x;
+        int y=coordinates.y;
+        for (int x2 = x - 1; x2 <= x + 1; x2++)
+            for (int y2 = y - 1; y2 <= y + 1; y2++) {
+                if (insideTheFieldAndNotEqualToCoordinates(x2,y2,coordinates)) {// if the surrounding cell is withing the field and is different cell
+                    clickOnCell(new Coordinates(x2,y2));//click on it
                 }
             }
     }
@@ -277,12 +270,18 @@ public class Game {
     }
 
     private void recalculateSurroundingFlags(Coordinates coordinates, int numberOfFlags) {
-        for (int i = coordinates.x - 1; i <= coordinates.x + 1; i++)
-            for (int j = coordinates.y - 1; j <= coordinates.y + 1; j++) {
-                Coordinates newClick = new Coordinates(i, j);
-                if (isInField(newClick) && !newClick.equals(coordinates)) {// if the surrounding cell is withing the field and is different cell
-                    gameField[newClick.x][newClick.y].addNeighboringFlags(numberOfFlags);
+        int x=coordinates.x;
+        int y=coordinates.y;
+        for (int x2 = x - 1; x2 <= x + 1; x2++)
+            for (int y2 = y - 1; y2 <= y + 1; y2++) {
+                if (insideTheFieldAndNotEqualToCoordinates(x2,y2,coordinates)) {// if the surrounding cell is withing the field and is different cell
+                    gameField[x2][y2].addNeighboringFlags(numberOfFlags);
                 }
             }
+    }
+
+    public boolean insideTheFieldAndNotEqualToCoordinates(int x, int y, Coordinates coordinates) {
+        return (coordinates.x!=x||coordinates.y!=y)&&
+                x>=0&&y>=0&&x<width&&y<height;
     }
 }
