@@ -35,7 +35,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             } catch (Exception e) {
                 NUMBER_OF_BOMBS=0;
             }
-            game = new Game(4,5,NUMBER_OF_BOMBS);
+            game = new Game(100,100,NUMBER_OF_BOMBS);
             b_start_game.setText("Restart game");
             redraw();
             return;

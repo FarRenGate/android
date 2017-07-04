@@ -1,5 +1,7 @@
 package com.example.android.minesweeper;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +36,7 @@ public class Game {
     private List<Coordinates> listOfMines;
 
     public Game(int width, int height, int numberOfMines) {
-       initGame(width,height,numberOfMines);
+        initGame(width,height,numberOfMines);
     }
 
     private void initGame(int width, int height, int numberOfMines){
@@ -68,7 +70,7 @@ public class Game {
 
     private void setNumberOfMines(int mines) {
         if ((mines>(width-1)*(height-1))||mines==0) { // Number of mines must be >0 and < some value (here (X-1)*(Y-1))
-           numberOfMines=(width-1)*(height-1);
+            numberOfMines=(width-1)*(height-1);
         }
         else {
             numberOfMines = mines;
@@ -214,11 +216,18 @@ public class Game {
             }
             loseGame();
         } else if (gameField[x][y].isClosed()) {// if the cell is not open yet
-            gameField[x][y].open(); // open the cell
-            fieldsOpen++;//increase the number of open fields
+            openCell(x,y);
             if (gameField[x][y].getNeighboringMines() == 0) {//if the cell is "0"-cell we must open all surrounding cells
-               clickOnSurroundingCells(coordinates);
+                clickOnSurroundingCells(coordinates);
             }
+        }
+    }
+
+    private void openCell(int x, int y) {
+        if (gameField[x][y].isClosed()) {
+            gameField[x][y].open();
+            fieldsOpen++;
+            Log.d("MyLog",String.format("opened cell at %d,%d", x,y));
         }
     }
 
@@ -240,7 +249,7 @@ public class Game {
 
     private void openSurroundingCells(Coordinates coordinates){
         if (gameField[coordinates.x][coordinates.y].isSuitableForOpenSurrounding()) {
-           clickOnSurroundingCells(coordinates);
+            clickOnSurroundingCells(coordinates);
         }
     }
 
