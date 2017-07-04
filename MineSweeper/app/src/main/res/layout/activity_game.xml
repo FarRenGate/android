@@ -101,7 +101,7 @@
             android:id="@+id/et_set_bombs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5"/>
+            android:text="1"/>
     </LinearLayout>
     <Button
         android:id="@+id/b_start_game"

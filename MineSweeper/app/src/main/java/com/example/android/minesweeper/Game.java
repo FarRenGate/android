@@ -3,7 +3,9 @@ package com.example.android.minesweeper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -218,7 +220,7 @@ public class Game {
         } else if (gameField[x][y].isClosed()) {// if the cell is not open yet
             openCell(x,y);
             if (gameField[x][y].getNeighboringMines() == 0) {//if the cell is "0"-cell we must open all surrounding cells
-                clickOnSurroundingCells(coordinates);
+                openAdjacentZeroCells(coordinates);
             }
         }
     }
@@ -227,7 +229,44 @@ public class Game {
         if (gameField[x][y].isClosed()) {
             gameField[x][y].open();
             fieldsOpen++;
-            Log.d("MyLog",String.format("opened cell at %d,%d", x,y));
+            Log.d("OpenCell",String.format("opened cell at %d,%d", x,y));
+        }
+    }
+
+    private void openAdjacentZeroCells(Coordinates coordinates) {
+        int x=coordinates.x;
+        int y=coordinates.y;
+        Queue<Coordinates> queue = new LinkedList<>();
+        if (gameField[x][y].getNeighboringMines()!=0) {
+            return;
+        }
+        queue.add(coordinates);
+        while (!queue.isEmpty()) {
+            for (Coordinates c: queue) {
+                Log.d("QueueContains",String.format("Queue contains: %d,%d", c.x,c.y));
+            }
+            Coordinates queueCoordinates =  queue.remove();
+            x=queueCoordinates.x;
+            y=queueCoordinates.y;
+            Log.d("AttemptToOpen",String.format("Attempt to open: %d,%d", x,y));
+            openCell(x,y);
+            if (gameField[x][y].getNeighboringMines()==0) {
+                addToQueueIfNeeded(queue,x-1,y);
+                addToQueueIfNeeded(queue,x+1,y);
+                addToQueueIfNeeded(queue,x,y-1);
+                addToQueueIfNeeded(queue,x,y+1);
+
+            }
+
+        }
+    }
+
+    private void addToQueueIfNeeded(Queue<Coordinates> queue, int x, int y) {
+        if (x>=0&&x<width&&y>=0&&y<height) {
+            if (gameField[x][y].isClosed()&&!queue.contains(new Coordinates(x,y))) {
+                queue.add(new Coordinates(x,y));
+                Log.d("AddedToQueue",String.format("added to %d,%d", x,y));
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener{
     private static int NUMBER_OF_BOMBS;
+    private static int WIDTH=100;
+    private static int HEIGHT=100;
 
     TextView tv_bombs_left;
     EditText et_set_bombs;
@@ -35,7 +37,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             } catch (Exception e) {
                 NUMBER_OF_BOMBS=0;
             }
-            game = new Game(100,100,NUMBER_OF_BOMBS);
+            game = new Game(WIDTH,HEIGHT,NUMBER_OF_BOMBS);
             b_start_game.setText("Restart game");
             redraw();
             return;
