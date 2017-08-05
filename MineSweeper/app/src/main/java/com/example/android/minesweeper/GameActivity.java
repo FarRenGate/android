@@ -2,16 +2,91 @@ package com.example.android.minesweeper;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener{
+public class GameActivity extends AppCompatActivity implements GridCellAdapter.GridCellClickListener, View.OnClickListener {
     private static int NUMBER_OF_BOMBS;
-    private static int WIDTH=100;
-    private static int HEIGHT=100;
+    private static int WIDTH=8;
+    private static int HEIGHT=8;
 
+    private GridCellAdapter mGridCellAdapter;
+    private RecyclerView mCellField;
+    private TextView tv_bombs_left;
+    private EditText et_set_bombs;
+    private Button b_start_game;
+    Game game;
+
+    private Toast mToast;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
+
+        mCellField = (RecyclerView) findViewById(R.id.rv_field);
+
+        FixedGridLayoutManager layoutManager = new FixedGridLayoutManager();
+        layoutManager.setTotalColumnCount(WIDTH);
+
+        mCellField.setLayoutManager(layoutManager);
+
+        mGridCellAdapter = new GridCellAdapter(WIDTH*HEIGHT,this);
+        mCellField.setAdapter(mGridCellAdapter);
+
+        tv_bombs_left = (TextView) findViewById(R.id.tv_bombs_left);
+        et_set_bombs = (EditText) findViewById(R.id.et_set_bombs);
+
+        b_start_game = (Button) findViewById(R.id.b_start_game);
+        b_start_game.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    public void onCellClick(int clickedItemIndex) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+
+        // COMPLETED (12) Show a Toast when an item is clicked, displaying that item number that was clicked
+        /*
+         * Create a Toast and store it in our Toast field.
+         * The Toast that shows up will have a message similar to the following:
+         *
+         *                     Item #42 clicked.
+         */
+        String toastMessage = "Item #" + clickedItemIndex + " clicked.";
+        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT);
+
+        mToast.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId()==R.id.b_start_game) {
+            NUMBER_OF_BOMBS=0;
+            try {
+                NUMBER_OF_BOMBS=Integer.parseInt(et_set_bombs.getText().toString());
+            } catch (Exception e) {
+                NUMBER_OF_BOMBS=0;
+            }
+            game = new Game(WIDTH,HEIGHT,NUMBER_OF_BOMBS);
+            b_start_game.setText("Restart game");
+            return;
+        }
+    }
+
+
+    /*
     TextView tv_bombs_left;
     EditText et_set_bombs;
     Button b_0, b_1, b_2,b_3, b_4, b_5,b_6, b_7, b_8,b_9, b_10, b_11,b_12, b_13, b_14, b_15,  b_16, b_17, b_18, b_19, b_start_game;
@@ -162,6 +237,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
+*/
 
 }

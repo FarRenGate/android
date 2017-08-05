@@ -7,7 +7,59 @@
     tools:context="com.example.android.minesweeper.GameActivity"
     android:orientation="vertical">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_field"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="bombs left:"/>
+
+            <TextView
+                android:id="@+id/tv_bombs_left"
+                android:paddingLeft="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Number of Bombs:"/>
+
+            <EditText
+                android:id="@+id/et_set_bombs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/b_start_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set bombs and start"/>
+
+    </LinearLayout>
+
+<!--
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,7 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set Number of Bonbs:"/>
+            android:text="Set Number of Bombs:"/>
 
         <EditText
             android:id="@+id/et_set_bombs"
@@ -108,6 +160,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set bombs and start"/>
-
+-->
 
 </LinearLayout>
