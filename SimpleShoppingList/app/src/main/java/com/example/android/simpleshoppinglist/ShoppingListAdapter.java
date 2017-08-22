@@ -20,10 +20,17 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     private Context mContext;
     private Cursor mCursor;
 
+    final private ListItemClickListener mOnClickListener;
 
-    public ShoppingListAdapter(Context context, Cursor cursor) {
+    public interface ListItemClickListener {
+        void onItemClick (int clickedItem);
+    }
+
+
+    public ShoppingListAdapter(Context context, Cursor cursor, ListItemClickListener listener) {
         mContext=context;
         mCursor=cursor;
+        mOnClickListener=listener;
     }
 
     @Override
@@ -60,15 +67,21 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         return mCursor.getCount();
     }
 
-    public class ShoppingListViewHolder extends RecyclerView.ViewHolder{
+    public class ShoppingListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView itemTextView;
 
         public ShoppingListViewHolder(View itemView) {
             super(itemView);
             itemTextView = (TextView) itemView.findViewById(R.id.tv_list_element);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            int clickedItem = getAdapterPosition();
+            mOnClickListener.onItemClick(clickedItem);
+        }
     }
 
 

@@ -10,13 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.android.simpleshoppinglist.data.DatabaseOperations;
 import com.example.android.simpleshoppinglist.data.ShoppingListHelper;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements ShoppingListAdapter.ListItemClickListener{
 
     private ShoppingListAdapter mShoppingListAdapter;
     private SQLiteDatabase mDb;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
         Cursor cursor = DatabaseOperations.getCursor(mDb);
 
-        mShoppingListAdapter = new ShoppingListAdapter(this,cursor);
+        mShoppingListAdapter = new ShoppingListAdapter(this,cursor,this);
 
         shoppingListView.setAdapter(mShoppingListAdapter);
 
@@ -67,5 +69,12 @@ public class MainActivity extends AppCompatActivity{
         if (mItemEditText.getText().length()==0) return;
         DatabaseOperations.addNewItem(mDb, mShoppingListAdapter, mItemEditText.getText().toString());
         mItemEditText.setText("");
+    }
+
+
+
+    @Override
+    public void onItemClick(int clickedItem) {
+        Toast.makeText(this,"item clicked",Toast.LENGTH_SHORT).show();
     }
 }
