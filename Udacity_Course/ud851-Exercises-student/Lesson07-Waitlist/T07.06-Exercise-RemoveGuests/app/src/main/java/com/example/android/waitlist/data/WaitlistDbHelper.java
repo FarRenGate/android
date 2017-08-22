@@ -32,7 +32,7 @@ public class WaitlistDbHelper extends SQLiteOpenHelper {
                 "); ";
 
         sqLiteDatabase.execSQL(SQL_CREATE_WAITLIST_TABLE);
-    }
+}
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {

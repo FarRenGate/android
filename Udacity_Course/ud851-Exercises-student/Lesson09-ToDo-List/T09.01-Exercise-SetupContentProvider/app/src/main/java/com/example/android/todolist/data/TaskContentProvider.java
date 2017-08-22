@@ -18,6 +18,7 @@ package com.example.android.todolist.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.support.annotation.NonNull;
 // TODO (1) Verify that TaskContentProvider extends from ContentProvider and implements required methods
 public class TaskContentProvider extends ContentProvider {
 
+    private TaskDbHelper mTaskDbHelper;
 
     /* onCreate() is where you should initialize anything you’ll need to setup
     your underlying data source.
@@ -33,10 +35,12 @@ public class TaskContentProvider extends ContentProvider {
      */
     @Override
     public boolean onCreate() {
+        Context context = getContext();
+        mTaskDbHelper = new TaskDbHelper(context);
         // TODO (2) Complete onCreate() and initialize a TaskDbhelper on startup
         // [Hint] Declare the DbHelper as a global variable
 
-        return false;
+        return true;
     }
 
 

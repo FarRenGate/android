@@ -3,12 +3,12 @@ package com.example.android.minesweeper;
 import android.util.Log;
 
 import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+
 
 /**
  * Created by User on 27/06/17.
@@ -96,6 +96,7 @@ public class Game {
 
     public void click (int fieldNumber) {
         Coordinates coordinates = fieldNumberToCoordinates(fieldNumber);
+
         if (!isWin&&!isLost) {
             if (!isGameStarted) {
                 startGame(fieldNumber);
@@ -107,6 +108,7 @@ public class Game {
                 }
             }
         }
+
     }
 
     private boolean checkIfGameWon(){
@@ -174,7 +176,7 @@ public class Game {
         int mineX;
         int mineY;
 
-        while (listOfMines.size()<numberOfMines) { // while there is still something to add
+       while (listOfMines.size()<numberOfMines) { // while there is still something to add
             mineX = r.nextInt(width);
             mineY = r.nextInt(height); //rangomly generating mine position within the fieldSize
             if (coordinatesToFieldNumber(mineX,mineY)!=fieldNumber) {// if this is not "clicking" point
@@ -185,12 +187,15 @@ public class Game {
             }
         }
 
-        /*
-        mines.clear();
-        mines.add(3);
-        mines.add(5);
-        numberOfMines=mines.size();
-        */
+
+        /*listOfMines.clear();
+        listOfMines.add(new Coordinates(2,1));
+        listOfMines.add(new Coordinates(1,2));
+        numberOfMines=listOfMines.size();
+        for (Coordinates c: listOfMines) {
+            gameField[c.x][c.y].putMine();
+        }*/
+
 
 
 
@@ -208,6 +213,7 @@ public class Game {
     }
 
     public void clickOnCell (Coordinates coordinates) {
+
         int x=coordinates.x;
         int y=coordinates.y;
 
@@ -219,9 +225,11 @@ public class Game {
             loseGame();
         } else if (gameField[x][y].isClosed()) {// if the cell is not open yet
             openCell(x,y);
+
             if (gameField[x][y].getNeighboringMines() == 0) {//if the cell is "0"-cell we must open all surrounding cells
-                openAdjacentZeroCells(coordinates);
+               openAdjacentZeroCells(coordinates);
             }
+
         }
     }
 
@@ -234,6 +242,7 @@ public class Game {
     }
 
     private void openAdjacentZeroCells(Coordinates coordinates) {
+
         int x=coordinates.x;
         int y=coordinates.y;
         Queue<Coordinates> queue = new LinkedList<>();
@@ -241,6 +250,7 @@ public class Game {
             return;
         }
         queue.add(coordinates);
+
         while (!queue.isEmpty()) {
             for (Coordinates c: queue) {
                 Log.d("QueueContains",String.format("Queue contains: %d,%d", c.x,c.y));
@@ -251,23 +261,27 @@ public class Game {
             Log.d("AttemptToOpen",String.format("Attempt to open: %d,%d", x,y));
             openCell(x,y);
             if (gameField[x][y].getNeighboringMines()==0) {
-                addToQueueIfNeeded(queue,x-1,y);
-                addToQueueIfNeeded(queue,x+1,y);
-                addToQueueIfNeeded(queue,x,y-1);
-                addToQueueIfNeeded(queue,x,y+1);
-
+                for (int i=-1; i<=1; i++)
+                    for (int j=-1; j<=1; j++)
+               addToQueueIfNeeded(queue,x+i,y+j);
+                /*if (addToQueueIfNeeded(queue,x+1,y)) clickedCells.add(coordinatesToFieldNumber(x+1,y));
+                if (addToQueueIfNeeded(queue,x,y-1)) clickedCells.add(coordinatesToFieldNumber(x,y-1));
+                if (addToQueueIfNeeded(queue,x,y+1)) clickedCells.add(coordinatesToFieldNumber(x,y+1));*/
             }
 
         }
+
     }
 
-    private void addToQueueIfNeeded(Queue<Coordinates> queue, int x, int y) {
+    private boolean addToQueueIfNeeded(Queue<Coordinates> queue, int x, int y) {
         if (x>=0&&x<width&&y>=0&&y<height) {
             if (gameField[x][y].isClosed()&&!queue.contains(new Coordinates(x,y))) {
                 queue.add(new Coordinates(x,y));
                 Log.d("AddedToQueue",String.format("added to %d,%d", x,y));
+                return true;
             }
         }
+        return false;
     }
 
     public String toString() {

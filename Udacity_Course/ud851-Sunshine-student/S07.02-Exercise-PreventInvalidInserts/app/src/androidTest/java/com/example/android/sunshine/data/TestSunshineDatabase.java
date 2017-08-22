@@ -204,7 +204,7 @@ public class TestSunshineDatabase {
     }
 
     /**
-<<<<<<< HEAD
+     <<<<<<< HEAD
      * Tests to ensure that inserts into your database results in automatically incrementing row
      * IDs and that row IDs are not reused.
      * <p>
@@ -222,7 +222,7 @@ public class TestSunshineDatabase {
      * database again. If AUTOINCREMENT isn't set up properly in the WeatherDbHelper's table
      * create statement, then the _ID of the first insert will be reused. However, if AUTOINCREMENT
      * is setup properly, that older ID will NOT be reused, and the test will pass.
-=======
+     =======
      * Tests the columns with null values cannot be inserted into the database.
      */
     @Test
@@ -284,7 +284,7 @@ public class TestSunshineDatabase {
     /**
      * Tests to ensure that inserts into your database results in automatically
      * incrementing row IDs.
->>>>>>> 4174cf2... S07.02-Exercise-PreventInvalidInserts
+     >>>>>>> 4174cf2... S07.02-Exercise-PreventInvalidInserts
      */
     @Test
     public void testIntegerAutoincrement() {

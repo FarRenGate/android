@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GameActivity extends AppCompatActivity implements GridCellAdapter.GridCellClickListener, View.OnClickListener {
+public class GameActivity extends AppCompatActivity implements GridCellAdapter.GridCellClickListener, View.OnClickListener, GridCellAdapter.GridCellLongClickListener {
     private static int NUMBER_OF_BOMBS;
     private static int WIDTH=8;
     private static int HEIGHT=8;
@@ -21,7 +22,7 @@ public class GameActivity extends AppCompatActivity implements GridCellAdapter.G
     private TextView tv_bombs_left;
     private EditText et_set_bombs;
     private Button b_start_game;
-    Game game;
+    //Game game;
 
     private Toast mToast;
 
@@ -39,7 +40,7 @@ public class GameActivity extends AppCompatActivity implements GridCellAdapter.G
 
         mCellField.setLayoutManager(layoutManager);
 
-        mGridCellAdapter = new GridCellAdapter(WIDTH*HEIGHT,this);
+        mGridCellAdapter = new GridCellAdapter(WIDTH*HEIGHT,this,this);
         mCellField.setAdapter(mGridCellAdapter);
 
         tv_bombs_left = (TextView) findViewById(R.id.tv_bombs_left);
@@ -52,25 +53,6 @@ public class GameActivity extends AppCompatActivity implements GridCellAdapter.G
     }
 
     @Override
-    public void onCellClick(int clickedItemIndex) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-
-        // COMPLETED (12) Show a Toast when an item is clicked, displaying that item number that was clicked
-        /*
-         * Create a Toast and store it in our Toast field.
-         * The Toast that shows up will have a message similar to the following:
-         *
-         *                     Item #42 clicked.
-         */
-        String toastMessage = "Item #" + clickedItemIndex + " clicked.";
-        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT);
-
-        mToast.show();
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId()==R.id.b_start_game) {
             NUMBER_OF_BOMBS=0;
@@ -79,10 +61,40 @@ public class GameActivity extends AppCompatActivity implements GridCellAdapter.G
             } catch (Exception e) {
                 NUMBER_OF_BOMBS=0;
             }
-            game = new Game(WIDTH,HEIGHT,NUMBER_OF_BOMBS);
+            mGridCellAdapter.startNewGame(WIDTH,HEIGHT,NUMBER_OF_BOMBS);
             b_start_game.setText("Restart game");
+            tv_bombs_left.setText(mGridCellAdapter.bombsLeft());
             return;
         }
+    }
+
+
+    @Override
+    public void onCellClick(int clickedItemIndex) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+
+        String toastMessage = "Item #" + clickedItemIndex + " clicked.";
+        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT);
+        Log.d("Click","Clicked " + Integer.toString(clickedItemIndex));
+        mToast.show();
+        tv_bombs_left.setText(mGridCellAdapter.bombsLeft());
+    }
+
+
+    @Override
+    public void onCellLongClick(int clickedItemIndex) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+
+
+        String toastMessage = "Item #" + clickedItemIndex + " long clicked.";
+        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT);
+        Log.d("Long Click","Long clicked "+Integer.toString(clickedItemIndex));
+        tv_bombs_left.setText(mGridCellAdapter.bombsLeft());
+        mToast.show();
     }
 
 

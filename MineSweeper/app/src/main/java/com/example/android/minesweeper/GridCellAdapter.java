@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by Oleg on 28.07.2017.
  */
@@ -14,14 +17,15 @@ import android.widget.TextView;
 public class GridCellAdapter extends RecyclerView.Adapter<GridCellAdapter.CellViewHolder> {
 
     final private GridCellClickListener mOnClickListener;
+    final private GridCellLongClickListener mOnLongClickListener;
 
-    private String[] mCellState;
+    private Game game;
     private int mNumberCells;
 
-    public GridCellAdapter(int numberOfCells, GridCellClickListener listener) {
+    public GridCellAdapter(int numberOfCells, GridCellClickListener listener, GridCellLongClickListener longClickListener) {
         mNumberCells=numberOfCells;
         mOnClickListener=listener;
-        mCellState=new String[mNumberCells];
+        mOnLongClickListener=longClickListener;
     }
 
     @Override
@@ -51,24 +55,72 @@ public class GridCellAdapter extends RecyclerView.Adapter<GridCellAdapter.CellVi
         void onCellClick(int clickedItemIndex);
     }
 
+    public interface GridCellLongClickListener {
+        void onCellLongClick(int clickedItemIndex);
+    }
 
-    public class CellViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void startNewGame(int width, int height, int numberOfMines) {
+        game = new Game(width,height,numberOfMines);
+        notifyDataSetChanged();
+    }
+
+    public String bombsLeft(){
+        if (game!=null) {
+        return game.toString();
+        } else {
+            return "";
+        }
+    }
+
+
+
+    public class CellViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView textCellNumber;
 
         public CellViewHolder(View itemView) {
             super(itemView);
             textCellNumber = (TextView) itemView.findViewById(R.id.cell_text);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         public void bind(int position) {
-            //textCellNumber.setText(String.valueOf(position));
+            if (game!=null) {
+                textCellNumber.setText(game.getCellState(position));
+            } else {
+                textCellNumber.setText("");
+            }
         }
 
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
+
             mOnClickListener.onCellClick(clickedPosition);
+            if (game==null) return;
+            game.click(clickedPosition);
+            notifyDataSetChanged();
+
+
+        /*    if (!game.isInGame()) {
+                game=null;
+            }*/
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int clickedPosition=getAdapterPosition();
+            mOnLongClickListener.onCellLongClick(clickedPosition);
+            if (game==null) {
+                return true;
+            }
+            game.rightClick(clickedPosition);
+            notifyDataSetChanged();
+           /* if (!game.isInGame()) {
+                game=null;
+            }*/
+            return true;
         }
     }
 }
