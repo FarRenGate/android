@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.simpleshoppinglist.data.ShoppingListContract;
+import com.example.android.simpleshoppinglist.data.ShoppingListContract.ShoppingListEntry;
+
+import static com.example.android.simpleshoppinglist.data.ShoppingListContract.ShoppingListEntry.*;
 
 /**
  * Created by User on 22/08/17.
@@ -46,9 +49,9 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         if (!mCursor.moveToPosition(position))
             return;
 
-        String listItem=mCursor.getString(mCursor.getColumnIndex(ShoppingListContract.ShoppingListEntry.COLUMN_ITEM));
-        int crossed = mCursor.getInt(mCursor.getColumnIndex(ShoppingListContract.ShoppingListEntry.COLUMN_CROSSED));
-        long id = mCursor.getLong(mCursor.getColumnIndex(ShoppingListContract.ShoppingListEntry._ID));
+        String listItem=mCursor.getString(mCursor.getColumnIndex(COLUMN_ITEM));
+        int crossed = mCursor.getInt(mCursor.getColumnIndex(COLUMN_CROSSED));
+        long id = mCursor.getLong(mCursor.getColumnIndex(_ID));
 
         holder.itemTextView.setText(listItem);
         holder.itemView.setTag(id);
@@ -81,6 +84,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         public void onClick(View v) {
             int clickedItem = getAdapterPosition();
             mOnClickListener.onItemClick(clickedItem);
+            notifyDataSetChanged();
         }
     }
 

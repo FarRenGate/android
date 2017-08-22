@@ -1,5 +1,6 @@
 package com.example.android.simpleshoppinglist;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
@@ -23,13 +24,14 @@ public class MainActivity extends AppCompatActivity implements ShoppingListAdapt
     private ShoppingListAdapter mShoppingListAdapter;
     private SQLiteDatabase mDb;
     private EditText mItemEditText;
+    RecyclerView shoppingListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView shoppingListView;
+
 
         shoppingListView = (RecyclerView)  this.findViewById(R.id.rv_ShoppingList);
         mItemEditText = (EditText) this.findViewById(R.id.et_addItem);
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingListAdapt
 
     @Override
     public void onItemClick(int clickedItem) {
-        Toast.makeText(this,"item clicked",Toast.LENGTH_SHORT).show();
+        View view = shoppingListView.findViewHolderForAdapterPosition(clickedItem).itemView;
+        DatabaseOperations.crossItem(mDb, mShoppingListAdapter, (long) view.getTag());
     }
 }
