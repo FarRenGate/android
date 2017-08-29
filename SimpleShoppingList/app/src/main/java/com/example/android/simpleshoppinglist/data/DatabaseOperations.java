@@ -25,37 +25,56 @@ public class DatabaseOperations {
                 _ID);
     }
 
-    public static long addNewItem (SQLiteDatabase db, ShoppingListAdapter adapter, String item) {
+    public static void addNewItem (SQLiteDatabase db, ShoppingListAdapter adapter, String itemString) {
+        String[] items = itemString.split(",");
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_ITEM,item);
-        cv.put(COLUMN_CROSSED,0);
+        for (String item: items) {
+            cv.put(COLUMN_ITEM, item.trim());
+            cv.put(COLUMN_CROSSED, 0);
+            db.insert(TABLE_NAME,null,cv);
+        }
         adapter.updateList(getCursor(db));
-        return db.insert(TABLE_NAME,null,cv);
     }
 
     public static boolean removeItem (SQLiteDatabase db, long id) {
         return db.delete(TABLE_NAME, _ID+"="+id,null)>0;
     }
 
-    public static void crossItem (SQLiteDatabase db, ShoppingListAdapter adapter, long id) {
-        ContentValues cv = new ContentValues();
-        String whereClause = _ID+"=?";
-        String[] whereArgs = new String[] {String.valueOf(id)};
-        Cursor cursor = db.query(TABLE_NAME,
-                new String[] {COLUMN_CROSSED},
-                whereClause,
-                whereArgs,
-                null,
-                null,
-                null);
-        cursor.moveToFirst();
-        int crossedValue = cursor.getInt(cursor.getColumnIndex(COLUMN_CROSSED));
-        if (crossedValue==0) crossedValue=1;
-        else crossedValue=0;
-        cv.put(COLUMN_CROSSED, crossedValue);
-        db.update(TABLE_NAME,cv, whereClause,whereArgs);
-        adapter.updateList(getCursor(db));
-        cursor.close();
+    public static void crossItem (SQLiteDatabase db, ShoppingListAdapter adapter, long id, boolean deleteOnTap) {
+        if (deleteOnTap) {
+            removeItem(db, id);
+            adapter.updateList(getCursor(db));
+        } else {
+            ContentValues cv = new ContentValues();
+            String whereClause = _ID + "=?";
+            String[] whereArgs = new String[]{String.valueOf(id)};
+            Cursor cursor = db.query(TABLE_NAME,
+                    new String[]{COLUMN_CROSSED},
+                    whereClause,
+                    whereArgs,
+                    null,
+                    null,
+                    null);
+            cursor.moveToFirst();
+            int crossedValue = cursor.getInt(cursor.getColumnIndex(COLUMN_CROSSED));
+            if (crossedValue == 0) crossedValue = 1;
+            else crossedValue = 0;
+            cv.put(COLUMN_CROSSED, crossedValue);
+            db.update(TABLE_NAME, cv, whereClause, whereArgs);
+            adapter.updateList(getCursor(db));
+            cursor.close();
+        }
     }
 
+    public static void removeCrossedItems(SQLiteDatabase db, ShoppingListAdapter adapter) {
+        db.delete(TABLE_NAME, COLUMN_CROSSED + "=?", new String[] { "1" });
+        adapter.updateList(getCursor(db));
+    }
+
+    public static void removeAllItems(SQLiteDatabase db, ShoppingListAdapter adapter) {
+
+        db.delete(TABLE_NAME, null, null);
+        adapter.updateList(getCursor(db));
+        
+    }
 }

@@ -3,6 +3,7 @@ package com.example.android.simpleshoppinglist;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,11 @@ import static com.example.android.simpleshoppinglist.data.ShoppingListContract.S
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
 
+    private static final int DEFAULT_TEXT_SIZE=22;
+
     private Context mContext;
     private Cursor mCursor;
+    int textSize;
 
     final private ListItemClickListener mOnClickListener;
 
@@ -29,11 +33,17 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         void onItemClick (int clickedItem);
     }
 
+    public void setTextSize (int textSize) {
+        this.textSize=textSize;
+        notifyDataSetChanged();
+    }
+
 
     public ShoppingListAdapter(Context context, Cursor cursor, ListItemClickListener listener) {
         mContext=context;
         mCursor=cursor;
         mOnClickListener=listener;
+        textSize=DEFAULT_TEXT_SIZE;
     }
 
     @Override
@@ -56,13 +66,21 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         holder.itemTextView.setText(listItem);
         holder.itemView.setTag(id);
 
+        holder.itemTextView.setTextSize(textSize);
+
         if (crossed==1) {
             holder.itemTextView.setPaintFlags(holder.itemTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.itemView.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.colorBackgroundCrossedItem));
         } else {
             holder.itemTextView.setPaintFlags(holder.itemTextView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.itemView.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.colorBackground));
         }
 
     }
+
+
 
 
     @Override
@@ -79,6 +97,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             itemTextView = (TextView) itemView.findViewById(R.id.tv_list_element);
             itemView.setOnClickListener(this);
         }
+
 
         @Override
         public void onClick(View v) {
